@@ -1,14 +1,16 @@
 server:
   port: 8080
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: "Authentication"
   devtools:
     add-properties: false
-  h2:
-    console:
-      enabled: true
-      path: "/h2"
+ # h2:
+  #  console:
+   #   enabled: true
+    #  path: "/h2"
   profiles:
     include: null
 management:
@@ -22,9 +24,21 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+
 springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
+adapters:
+  r2dbc:
+    host: "localhost"
+    port: 3306
+    database: "micro_auth"
+    username: "all_"
+    password: "all_2021"
+
+routes:
+  paths:
+    users: "/api/v1/users"
