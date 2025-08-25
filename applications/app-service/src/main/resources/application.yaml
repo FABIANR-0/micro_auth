@@ -39,6 +39,6 @@ adapters:
     username: "all_"
     password: "all_2021"
 
-routes:
-  paths:
-    users: "/api/v1/users"
+#routes:
+#  paths:
+#    users: "/api/v1/users"

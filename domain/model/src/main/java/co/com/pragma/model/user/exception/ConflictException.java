@@ -1,9 +1,6 @@
-package co.com.pragma.usecase.user.exception;
-import lombok.Getter;
+package co.com.pragma.model.user.exception;
 
-@Getter
 public class ConflictException extends RuntimeException {
-
     public ConflictException(String message) {
         super(message);
     }

@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import co.com.pragma.api.config.UserPath;
-
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -25,38 +22,9 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @AllArgsConstructor
 public class RouterRest {
 
-    private final UserPath userPath;
 
     @Bean
     @RouterOperations({
-            @RouterOperation(
-                    path = "/api/usecase/path",
-                    produces = { "application/json" },
-                    method = RequestMethod.GET,
-                    beanClass = Handler.class,
-                    beanMethod = "listenGETUseCase",
-                    operation = @Operation(
-                            operationId = "getUseCase",
-                            summary = "Get UseCase",
-                            responses = {
-                                    @ApiResponse(responseCode = "200", description = "Successful operation")
-                            }
-                    )
-            ),
-            @RouterOperation(
-                    path = "/api/usecase/otherpath",
-                    produces = { "application/json" },
-                    method = RequestMethod.POST,
-                    beanClass = Handler.class,
-                    beanMethod = "listenPOSTUseCase",
-                    operation = @Operation(
-                            operationId = "postUseCase",
-                            summary = "Post UseCase",
-                            responses = {
-                                    @ApiResponse(responseCode = "200", description = "Successful operation")
-                            }
-                    )
-            ),
             @RouterOperation(
                     path = "/api/v1/users",
                     produces = { "application/json" },
@@ -75,14 +43,14 @@ public class RouterRest {
                                     )
                             ),
                             responses = {
-                                    @ApiResponse(responseCode = "200", description = "Successful operation")
+                                    @ApiResponse(responseCode = "200", description = "Successful operation"),
+                                    @ApiResponse(responseCode = "400", description = "Invalid input"),
+                                    @ApiResponse(responseCode = "409", description = "User already exists")
                             }
                     )
             )
     })
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-        return route(GET("/api/usecase/path"), handler::listenGETUseCase)
-                .andRoute(POST("/api/usecase/otherpath"), handler::listenPOSTUseCase)
-                .and(route(POST(userPath.users()), handler::createUser));
+        return route(POST("/api/v1/users"), handler::createUser);
     }
 }

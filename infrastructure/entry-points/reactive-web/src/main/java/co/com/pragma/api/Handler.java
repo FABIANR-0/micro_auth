@@ -20,16 +20,6 @@ public class Handler {
 
     private final ValidationUtils validationUtils;
 
-    public Mono<ServerResponse> listenGETUseCase(ServerRequest serverRequest) {
-        // useCase.logic();
-        return ServerResponse.ok().bodyValue("");
-    }
-
-    public Mono<ServerResponse> listenPOSTUseCase(ServerRequest serverRequest) {
-        // useCase.logic();
-        return ServerResponse.ok().bodyValue("");
-    }
-
     public Mono<ServerResponse> createUser(ServerRequest serverRequest) {
         return validationUtils.validateBody(serverRequest, UserRequest.class)
                 .flatMap(userRequest -> userUseCase.createUser(userMapper.toUser(userRequest))

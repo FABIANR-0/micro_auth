@@ -1,6 +1,7 @@
 package co.com.pragma.api.exception;
 
-import co.com.pragma.usecase.user.exception.ConflictException;
+import co.com.pragma.model.user.exception.ConflictException;
+import co.com.pragma.model.user.exception.DomainException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
@@ -37,6 +38,10 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
 
         if (ex instanceof ConflictException) {
             return writeJson(response, HttpStatus.CONFLICT, Map.of("message", ex.getMessage()));
+        }
+
+        if (ex instanceof DomainException) {
+            return writeJson(response, HttpStatus.BAD_REQUEST, Map.of("message", ex.getMessage()));
         }
 
         return Mono.error(ex);

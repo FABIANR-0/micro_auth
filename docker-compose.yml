@@ -1,0 +1,15 @@
+version: '3'
+services:
+  db-micro-auth:
+    image: mysql:latest
+    container_name: db-micro-auth
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: micro_auth
+      MYSQL_USER: all_
+      MYSQL_PASSWORD: all_2021
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    expose:
+      - 3306
