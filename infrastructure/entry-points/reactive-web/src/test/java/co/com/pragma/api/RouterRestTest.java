@@ -1,60 +1,99 @@
 package co.com.pragma.api;
 
-import org.assertj.core.api.Assertions;
+import co.com.pragma.api.dto.UserRequest;
+import co.com.pragma.api.dto.UserResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Mono;
 
-@ContextConfiguration(classes = {RouterRest.class, Handler.class})
-@WebFluxTest
+import java.util.Objects;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class RouterRestTest {
 
-//    @Autowired
-//    private WebTestClient webTestClient;
+    @Mock
+    private Handler handler;
 
-//    @Test
-//    void testListenGETUseCase() {
-//        webTestClient.get()
-//                .uri("/api/usecase/path")
-//                .accept(MediaType.APPLICATION_JSON)
-//                .exchange()
-//                .expectStatus().isOk()
-//                .expectBody(String.class)
-//                .value(userResponse -> {
-//                            Assertions.assertThat(userResponse).isEmpty();
-//                        }
-//                );
-//    }
-//
-//    @Test
-//    void testListenGETOtherUseCase() {
-//        webTestClient.get()
-//                .uri("/api/otherusercase/path")
-//                .accept(MediaType.APPLICATION_JSON)
-//                .exchange()
-//                .expectStatus().isOk()
-//                .expectBody(String.class)
-//                .value(userResponse -> {
-//                            Assertions.assertThat(userResponse).isEmpty();
-//                        }
-//                );
-//    }
-//
-//    @Test
-//    void testListenPOSTUseCase() {
-//        webTestClient.post()
-//                .uri("/api/usecase/otherpath")
-//                .accept(MediaType.APPLICATION_JSON)
-//                .bodyValue("")
-//                .exchange()
-//                .expectStatus().isOk()
-//                .expectBody(String.class)
-//                .value(userResponse -> {
-//                            Assertions.assertThat(userResponse).isEmpty();
-//                        }
-//                );
-//    }
+    private RouterRest routerRest;
+    private WebTestClient webTestClient;
+    private ObjectMapper objectMapper;
+
+    private UserRequest userRequest;
+    private UserResponse expectedResponse;
+
+    @BeforeEach
+    void setUp() {
+        routerRest = new RouterRest();
+        objectMapper = new ObjectMapper();
+
+        RouterFunction<ServerResponse> routerFunction = routerRest.routerFunction(handler);
+        webTestClient = WebTestClient.bindToRouterFunction(routerFunction).build();
+
+        userRequest = UserRequest.builder()
+                .name("John Doe")
+                .email("john.doe@example.com")
+                .phone("1234567890")
+                .build();
+
+        expectedResponse = UserResponse.builder()
+                .userId(1L)
+                .name("John Doe")
+                .email("john.doe@example.com")
+                .phone("1234567890")
+                .build();
+    }
+
+    @Test
+    @DisplayName("Should create user successfully and return 201")
+    void shouldCreateUserSuccessfully() {
+
+        when(handler.createUser(any()))
+                .thenReturn(Mono.just(Objects.requireNonNull(ServerResponse.status(201)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(expectedResponse)
+                        .block())));
+
+        // When & Then
+        webTestClient.post()
+                .uri("/api/v1/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userRequest)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(UserResponse.class)
+                .isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @DisplayName("Should return 409 when user already exists")
+    void shouldReturnConflictWhenUserAlreadyExists() {
+
+        when(handler.createUser(any()))
+                .thenReturn(Mono.just(Objects.requireNonNull(ServerResponse.status(409)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue("{\"error\": \"User already exists\"}")
+                        .block())));
+
+        // When & Then
+        webTestClient.post()
+                .uri("/api/v1/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userRequest)
+                .exchange()
+                .expectStatus().isEqualTo(409)
+                .expectHeader().contentType(MediaType.APPLICATION_JSON);
+    }
 }

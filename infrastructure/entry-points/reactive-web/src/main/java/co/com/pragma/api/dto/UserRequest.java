@@ -3,6 +3,7 @@ package co.com.pragma.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import static co.com.pragma.api.util.Constants.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class UserRequest {
 
     @NotBlank(message = VALID_NAME)
