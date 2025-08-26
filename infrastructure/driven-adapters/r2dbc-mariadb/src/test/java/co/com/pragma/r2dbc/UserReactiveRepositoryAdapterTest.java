@@ -54,7 +54,7 @@ class UserReactiveRepositoryAdapterTest {
             .build();
 
     @Test
-    void shouldFindTaskById() {
+    void shouldFindUserById() {
         when(mapper.map(userEntity, User.class)).thenReturn(user);
 
         when(repository.findById(1L)).thenReturn(Mono.just(userEntity));
@@ -76,6 +76,28 @@ class UserReactiveRepositoryAdapterTest {
 
         StepVerifier.create(result)
                 .expectNext(user)
+                .verifyComplete();
+    }
+
+    @Test
+    void shouldReturnTrueWhenEmailExists() {
+        when(repository.findByEmail("juan.perez@example.com")).thenReturn(Mono.just(userEntity));
+
+        Mono<Boolean> result = repositoryAdapter.existsByEmail("juan.perez@example.com");
+
+        StepVerifier.create(result)
+                .expectNext(true)
+                .verifyComplete();
+    }
+
+    @Test
+    void shouldReturnFalseWhenEmailDoesNotExist() {
+        when(repository.findByEmail("unknown@example.com")).thenReturn(Mono.empty());
+
+        Mono<Boolean> result = repositoryAdapter.existsByEmail("unknown@example.com");
+
+        StepVerifier.create(result)
+                .expectNext(false)
                 .verifyComplete();
     }
 

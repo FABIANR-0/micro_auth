@@ -98,6 +98,25 @@ class ReactiveAdapterOperationsTest {
                 .verifyComplete();
     }
 
+    @Test
+    void toEntityShouldReturnMappedEntityWhenDataIsNotNull() {
+        DummyData data = new DummyData("1", "test");
+
+        DummyEntity result = operations.toEntity(data);
+
+        org.assertj.core.api.Assertions.assertThat(result)
+                .isNotNull()
+                .extracting(DummyEntity::getId, DummyEntity::getName)
+                .containsExactly("1", "test");
+    }
+
+    @Test
+    void toEntityShouldReturnNullWhenDataIsNull() {
+        DummyEntity result = operations.toEntity(null);
+
+        org.assertj.core.api.Assertions.assertThat(result).isNull();
+    }
+
     static class DummyEntity {
         private String id;
         private String name;
