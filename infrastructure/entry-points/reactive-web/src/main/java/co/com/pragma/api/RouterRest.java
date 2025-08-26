@@ -1,6 +1,7 @@
 package co.com.pragma.api;
 
 import co.com.pragma.api.dto.UserRequest;
+import co.com.pragma.api.dto.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,7 +44,12 @@ public class RouterRest {
                                     )
                             ),
                             responses = {
-                                    @ApiResponse(responseCode = "200", description = "Successful operation"),
+                                    @ApiResponse(responseCode = "201", description = "Successful created user",
+                                            content = @Content(
+                                                    mediaType = "application/json",
+                                                    schema = @Schema(implementation = UserResponse.class)
+                                            )
+                                    ),
                                     @ApiResponse(responseCode = "400", description = "Invalid input"),
                                     @ApiResponse(responseCode = "409", description = "User already exists")
                             }

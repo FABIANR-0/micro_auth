@@ -10,18 +10,13 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public class RoleRepositoryAdapter extends ReactiveAdapterOperations<
-        Role/* change for domain model */,
-        RoleEntity/* change for adapter model */,
+        Role,
+        RoleEntity,
         Long,
         RoleReactiveRepository
         > implements RoleRepository {
     public RoleRepositoryAdapter (RoleReactiveRepository repository, ObjectMapper mapper) {
-        /*
-           Could be use mapper.mapBuilder if your domain model implement builder pattern
-           super(repository, mapper, d -> mapper.mapBuilder(d,ObjectModel.ObjectModelBuilder.class).build());
-           Or using mapper.map with the class of the object model
-         */
-        super(repository, mapper, d -> mapper.map(d, Role.class/* change for domain model */));
+        super(repository, mapper, d -> mapper.map(d, Role.class));
     }
 
     @Override

@@ -5,6 +5,7 @@ import co.com.pragma.api.mapper.UserMapper;
 import co.com.pragma.api.util.ValidationUtils;
 import co.com.pragma.usecase.user.UserUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -23,7 +24,8 @@ public class Handler {
     public Mono<ServerResponse> createUser(ServerRequest serverRequest) {
         return validationUtils.validateBody(serverRequest, UserRequest.class)
                 .flatMap(userRequest -> userUseCase.createUser(userMapper.toUser(userRequest))
-                        .flatMap(user -> ServerResponse.ok().bodyValue(userMapper.toDto(user)))
+                        .flatMap(user -> ServerResponse.status(HttpStatus.CREATED).bodyValue(userMapper.toDto(user)))
+
                 );
     }
 }
