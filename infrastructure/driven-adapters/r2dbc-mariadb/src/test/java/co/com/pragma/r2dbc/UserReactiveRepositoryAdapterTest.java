@@ -19,7 +19,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserReactiveRepositoryAdapterTest {
-    // TODO: change four you own tests
 
     @InjectMocks
     UserRepositoryAdapter repositoryAdapter;
@@ -58,9 +57,9 @@ class UserReactiveRepositoryAdapterTest {
     void shouldFindTaskById() {
         when(mapper.map(userEntity, User.class)).thenReturn(user);
 
-        when(repository.findById("1")).thenReturn(Mono.just(userEntity));
+        when(repository.findById(1L)).thenReturn(Mono.just(userEntity));
 
-        Mono<User> result = repositoryAdapter.findById("1");
+        Mono<User> result = repositoryAdapter.findById(1L);
 
         StepVerifier.create(result)
                 .expectNextMatches(u -> u.getUserId().equals(1L) && u.getName().equals("Juan"))

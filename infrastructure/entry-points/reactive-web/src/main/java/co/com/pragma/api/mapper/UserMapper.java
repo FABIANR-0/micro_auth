@@ -1,6 +1,7 @@
 package co.com.pragma.api.mapper;
 
 import co.com.pragma.api.dto.UserRequest;
+import co.com.pragma.api.dto.UserResponse;
 import co.com.pragma.model.user.User;
 import org.mapstruct.Mapper;
 
@@ -8,5 +9,5 @@ import org.mapstruct.Mapper;
 public interface UserMapper {
     User toUser(UserRequest dto);
 
-    UserRequest toDto(User user);
+    UserResponse toDto(User user);
 }

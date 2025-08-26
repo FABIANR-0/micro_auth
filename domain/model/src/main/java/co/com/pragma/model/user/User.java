@@ -27,4 +27,6 @@ public class User {
     private String address;
 
     private BigDecimal baseSalary;
+
+    private Long roleId;
 }

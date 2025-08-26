@@ -28,6 +28,8 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
     public Mono<Void> handle(@NonNull ServerWebExchange exchange, @NonNull Throwable ex) {
         var response = exchange.getResponse();
 
+        System.out.println("[EXCEPTION] Error : " + ex.getMessage());
+
         if (ex instanceof ValidationException vex) {
             var errors = vex.getErrors().getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)

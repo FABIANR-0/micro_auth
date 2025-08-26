@@ -38,7 +38,6 @@ adapters:
     database: "micro_auth"
     username: "all_"
     password: "all_2021"
-
-#routes:
-#  paths:
-#    users: "/api/v1/users"
+#logging:
+#  file:
+#    name: Logs/Log_Micro_Auth.log
