@@ -2,7 +2,6 @@ package co.com.pragma.api;
 
 import co.com.pragma.api.dto.UserRequest;
 import co.com.pragma.api.dto.UserResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,17 +25,13 @@ class RouterRestTest {
     @Mock
     private Handler handler;
 
-    private RouterRest routerRest;
     private WebTestClient webTestClient;
-    private ObjectMapper objectMapper;
-
     private UserRequest userRequest;
     private UserResponse expectedResponse;
 
     @BeforeEach
     void setUp() {
-        routerRest = new RouterRest();
-        objectMapper = new ObjectMapper();
+        RouterRest routerRest = new RouterRest();
 
         RouterFunction<ServerResponse> routerFunction = routerRest.routerFunction(handler);
         webTestClient = WebTestClient.bindToRouterFunction(routerFunction).build();
