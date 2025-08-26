@@ -76,7 +76,7 @@ class RoleRepositoryAdapterTest {
 
     @Test
     void shouldReturnTrueWhenRoleExistsById() {
-        when(roleReactiveRepository.findById(1L)).thenReturn(Mono.just(roleEntity));
+        when(roleReactiveRepository.existsById(1L)).thenReturn(Mono.just(true));
 
         Mono<Boolean> result = roleRepositoryAdapter.existsById(1L);
 
@@ -87,7 +87,7 @@ class RoleRepositoryAdapterTest {
 
     @Test
     void shouldReturnFalseWhenRoleDoesNotExistById() {
-        when(roleReactiveRepository.findById(2L)).thenReturn(Mono.empty());
+        when(roleReactiveRepository.existsById(2L)).thenReturn(Mono.just(false));
 
         Mono<Boolean> result = roleRepositoryAdapter.existsById(2L);
 

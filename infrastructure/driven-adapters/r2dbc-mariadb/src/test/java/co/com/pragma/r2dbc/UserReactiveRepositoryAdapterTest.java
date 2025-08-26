@@ -15,6 +15,8 @@ import reactor.test.StepVerifier;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -81,7 +83,7 @@ class UserReactiveRepositoryAdapterTest {
 
     @Test
     void shouldReturnTrueWhenEmailExists() {
-        when(repository.findByEmail("juan.perez@example.com")).thenReturn(Mono.just(userEntity));
+        when(repository.existsByEmailIgnoreCase("juan.perez@example.com")).thenReturn(Mono.just(true));
 
         Mono<Boolean> result = repositoryAdapter.existsByEmail("juan.perez@example.com");
 
@@ -92,7 +94,7 @@ class UserReactiveRepositoryAdapterTest {
 
     @Test
     void shouldReturnFalseWhenEmailDoesNotExist() {
-        when(repository.findByEmail("unknown@example.com")).thenReturn(Mono.empty());
+        when(repository.existsByEmailIgnoreCase("unknown@example.com")).thenReturn(Mono.just(false));
 
         Mono<Boolean> result = repositoryAdapter.existsByEmail("unknown@example.com");
 
@@ -113,5 +115,22 @@ class UserReactiveRepositoryAdapterTest {
         StepVerifier.create(result)
                 .expectNext(user)
                 .verifyComplete();
+    }
+
+    @Test
+    void shouldCreateUserSuccessfully() {
+        when(repository.save(userEntity)).thenReturn(Mono.just(userEntity));
+        when(mapper.map(user, UserEntity.class)).thenReturn(userEntity);
+        when(mapper.map(userEntity, User.class)).thenReturn(user);
+
+        Mono<User> result = repositoryAdapter.create(user);
+
+        StepVerifier.create(result)
+                .expectNextMatches(createdUser ->
+                        createdUser.getUserId().equals(user.getUserId()) &&
+                                createdUser.getNit().equals(user.getNit())
+                ).verifyComplete();
+
+        verify(repository).save(any(UserEntity.class));
     }
 }

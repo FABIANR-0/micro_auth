@@ -21,7 +21,6 @@ public class RoleRepositoryAdapter extends ReactiveAdapterOperations<
 
     @Override
     public Mono<Boolean> existsById(Long roleId) {
-        return this.repository.findById(roleId)
-                .hasElement();
+        return this.repository.existsById(roleId);
     }
 }

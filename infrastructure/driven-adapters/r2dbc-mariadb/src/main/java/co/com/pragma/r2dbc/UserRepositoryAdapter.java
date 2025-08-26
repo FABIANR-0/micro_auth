@@ -27,7 +27,6 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
 
     @Override
     public Mono<Boolean> existsByEmail(String email) {
-        return this.repository.findByEmail(email)
-                .hasElement();
+        return this.repository.existsByEmailIgnoreCase(email);
     }
 }
