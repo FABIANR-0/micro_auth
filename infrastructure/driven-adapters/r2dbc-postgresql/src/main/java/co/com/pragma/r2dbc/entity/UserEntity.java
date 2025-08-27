@@ -11,7 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Table("user")
+@Table("\"user\"")
 @Data
 @Builder
 @AllArgsConstructor

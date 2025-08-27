@@ -1,19 +1,17 @@
 CREATE TABLE role
 (
-    role_id     BIGINT AUTO_INCREMENT PRIMARY KEY,
+    role_id     BIGSERIAL PRIMARY KEY,
     name        VARCHAR(50) NOT NULL UNIQUE,
     description VARCHAR(50) NOT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
+);
 
-INSERT INTO role
-VALUES (1,'ADMIN', 'ADMIN ROLE WITH ALL FUNCTIONS'),
-       (2,'CLIENT', 'CLIENT ROLE - LOAN APPLICANT');
+INSERT INTO role (role_id, name, description)
+VALUES (1, 'ADMIN', 'ADMIN ROLE WITH ALL FUNCTIONS'),
+       (2, 'CLIENT', 'CLIENT ROLE - LOAN APPLICANT');
 
-CREATE TABLE user
+CREATE TABLE "user"
 (
-    user_id     BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id     BIGSERIAL PRIMARY KEY,
     name        VARCHAR(50)    NOT NULL,
     last_name   VARCHAR(50)    NOT NULL,
     birth_date  DATE,
@@ -21,10 +19,7 @@ CREATE TABLE user
     phone       VARCHAR(20),
     email       VARCHAR(100)   NOT NULL UNIQUE,
     address     VARCHAR(100),
-    base_salary DECIMAL(10, 2) NOT NULL,
+    base_salary NUMERIC(10, 2) NOT NULL,
     role_id     BIGINT NOT NULL,
     CONSTRAINT fk_user_role FOREIGN KEY (role_id) REFERENCES role(role_id)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-
+);

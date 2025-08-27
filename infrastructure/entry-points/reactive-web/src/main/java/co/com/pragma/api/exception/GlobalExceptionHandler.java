@@ -30,23 +30,23 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
     public Mono<Void> handle(@NonNull ServerWebExchange exchange, @NonNull Throwable ex) {
         var response = exchange.getResponse();
 
-        if (ex instanceof ValidationException vex) {
-            var errors = vex.getErrors().getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .toList();
-            errors.forEach(message -> log.error("Validation error: {}", message));
-            return writeJson(response, HttpStatus.BAD_REQUEST, Map.of("errors", errors));
-        }
+        return switch (ex) {
+            case ValidationException vex -> {
+                var errors = vex.getErrors().getAllErrors().stream()
+                        .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                        .toList();
+                errors.forEach(message -> log.error("Validation error: {}", message));
+                yield writeJson(response, HttpStatus.BAD_REQUEST, Map.of("errors", errors));
+            }
+            case ConflictException exception ->
+                    writeJson(response, HttpStatus.CONFLICT, Map.of("message", exception.getMessage()));
 
-        if (ex instanceof ConflictException) {
-            return writeJson(response, HttpStatus.CONFLICT, Map.of("message", ex.getMessage()));
-        }
+            case ResourceNotFound exception ->
+                    writeJson(response, HttpStatus.NOT_FOUND, Map.of("message", exception.getMessage()));
 
-        if (ex instanceof ResourceNotFound) {
-            return writeJson(response, HttpStatus.NOT_FOUND, Map.of("message", ex.getMessage()));
-        }
+            default -> Mono.error(ex);
 
-        return Mono.error(ex);
+        };
     }
 
     private Mono<Void> writeJson(ServerHttpResponse response, HttpStatus status, Object body) {

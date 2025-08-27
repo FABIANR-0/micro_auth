@@ -1,5 +1,6 @@
 package co.com.pragma.r2dbc.helper;
 
+import lombok.Getter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -117,8 +118,9 @@ class ReactiveAdapterOperationsTest {
         org.assertj.core.api.Assertions.assertThat(result).isNull();
     }
 
+    @Getter
     static class DummyEntity {
-        private String id;
+        private final String id;
         private String name;
 
         public DummyEntity(String id, String name) {
@@ -128,14 +130,6 @@ class ReactiveAdapterOperationsTest {
 
         public static DummyEntity toEntity(DummyData data) {
             return new DummyEntity(data.getId(), data.getName());
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
         }
 
         @Override
@@ -152,6 +146,7 @@ class ReactiveAdapterOperationsTest {
         }
     }
 
+    @Getter
     static class DummyData {
         private String id;
         private String name;
@@ -159,14 +154,6 @@ class ReactiveAdapterOperationsTest {
         public DummyData(String id, String name) {
             this.id = id;
             this.name = name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
         }
 
         @Override

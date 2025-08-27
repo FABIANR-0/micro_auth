@@ -33,11 +33,12 @@ springdoc:
     enabled: true
 adapters:
   r2dbc:
-    host: "localhost"
-    port: 3306
-    database: "micro_auth"
-    username: "all_"
-    password: "all_2021"
+    host: localhost
+    port: 5432
+    database: micro_auth
+    schema: public
+    username: postgres
+    password: 1234
 logging:
     level:
       root: INFO

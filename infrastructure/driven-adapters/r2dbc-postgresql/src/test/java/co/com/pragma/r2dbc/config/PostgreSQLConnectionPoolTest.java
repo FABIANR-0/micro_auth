@@ -9,13 +9,13 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
-class MariaDBConnectionPoolTest {
+class PostgreSQLConnectionPoolTest {
 
     @InjectMocks
-    private MariaDBConnectionPool connectionPool;
+    private PostgreSQLConnectionPool connectionPool;
 
     @Mock
-    private MariaDBConnectionProperties properties;
+    private PostgresqlConnectionProperties properties;
 
 
     @BeforeEach
@@ -25,6 +25,7 @@ class MariaDBConnectionPoolTest {
         when(properties.host()).thenReturn("localhost");
         when(properties.port()).thenReturn(5432);
         when(properties.database()).thenReturn("dbName");
+        when(properties.schema()).thenReturn("schema");
         when(properties.username()).thenReturn("username");
         when(properties.password()).thenReturn("password");
     }
