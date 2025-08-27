@@ -14,9 +14,9 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Franchise API")
+                        .title("Authentication API")
                         .version("1.0")
-                        .description("API para gestionar franquicias con RouterFunctions y Handlers")
+                        .description("API for users - Credits Pragma Application")
                         .contact(new Contact()
                                 .name("Pragma Team")
                                 .email("support@pragma.co")

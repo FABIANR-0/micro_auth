@@ -1,12 +1,12 @@
 package co.com.pragma.logger;
 
-import co.com.pragma.model.user.util.UserCaseLogger;
+import co.com.pragma.model.util.LoggerGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Slf4jUseCaseLogger implements UserCaseLogger {
+public class Slf4jUseCaseLogger implements LoggerGateway {
     private static final Logger log =  LoggerFactory.getLogger(Slf4jUseCaseLogger.class);
 
     @Override

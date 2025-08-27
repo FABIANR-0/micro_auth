@@ -5,7 +5,8 @@ import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.exception.ConflictException;
 import co.com.pragma.model.user.exception.ResourceNotFound;
 import co.com.pragma.model.user.gateways.UserRepository;
-import co.com.pragma.model.user.util.UserCaseLogger;
+import co.com.pragma.model.util.TransactionalGateway;
+import co.com.pragma.model.util.LoggerGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -31,7 +32,10 @@ class UserUseCaseTest {
     private RoleRepository roleRepository;
 
     @Mock
-    private UserCaseLogger log;
+    private LoggerGateway log;
+
+    @Mock
+    private TransactionalGateway transactional;
 
     @InjectMocks
     private UserUseCase userUseCase;
@@ -52,6 +56,9 @@ class UserUseCaseTest {
                 .address("Calle 45 #12-34")
                 .baseSalary(new BigDecimal("2500000.00"))
                 .build();
+
+        when(transactional.executeInTransaction(any(Mono.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     @Test

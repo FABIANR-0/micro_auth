@@ -1,6 +1,6 @@
-package co.com.pragma.model.user.util;
+package co.com.pragma.model.util;
 
-public interface UserCaseLogger {
+public interface LoggerGateway {
 
     void trace(String message, Object ... args);
 
