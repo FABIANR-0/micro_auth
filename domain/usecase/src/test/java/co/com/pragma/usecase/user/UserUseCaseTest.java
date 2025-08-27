@@ -3,8 +3,9 @@ package co.com.pragma.usecase.user;
 import co.com.pragma.model.role.gateways.RoleRepository;
 import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.exception.ConflictException;
-import co.com.pragma.model.user.exception.DomainException;
+import co.com.pragma.model.user.exception.ResourceNotFound;
 import co.com.pragma.model.user.gateways.UserRepository;
+import co.com.pragma.model.user.util.UserCaseLogger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -29,6 +30,9 @@ class UserUseCaseTest {
     @Mock
     private RoleRepository roleRepository;
 
+    @Mock
+    private UserCaseLogger log;
+
     @InjectMocks
     private UserUseCase userUseCase;
 
@@ -48,7 +52,6 @@ class UserUseCaseTest {
                 .address("Calle 45 #12-34")
                 .baseSalary(new BigDecimal("2500000.00"))
                 .build();
-
     }
 
     @Test
@@ -96,7 +99,7 @@ class UserUseCaseTest {
         // Act & Assert
         StepVerifier.create(userUseCase.createUser(user))
                 .expectErrorMatches(throwable ->
-                        throwable instanceof DomainException &&
+                        throwable instanceof ResourceNotFound &&
                                 VALID_ROLE_EXISTS.equals(throwable.getMessage()))
                 .verify();
 

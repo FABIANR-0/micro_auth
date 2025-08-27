@@ -2,6 +2,7 @@ package co.com.pragma.r2dbc;
 
 import co.com.pragma.model.user.User;
 import co.com.pragma.r2dbc.entity.UserEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,29 +32,36 @@ class UserReactiveRepositoryAdapterTest {
     @Mock
     ObjectMapper mapper;
 
-    private final User user = User.builder()
-            .userId(1L)
-            .name("Juan")
-            .lastName("Pérez")
-            .birthDate(LocalDate.of(1995, 5, 12))
-            .nit("123456789")
-            .phone("3001234567")
-            .email("juan.perez@example.com")
-            .address("Calle 45 #12-34")
-            .baseSalary(new BigDecimal("2500000.00"))
-            .build();
+    private  User user;
 
-    private final UserEntity userEntity = UserEntity.builder()
-            .userId(1L)
-            .name("Carlos")
-            .lastName("Ramírez")
-            .birthDate(LocalDate.of(1990, 3, 15))
-            .nit("987654321")
-            .phone("3106547890")
-            .email("carlos.ramirez@example.com")
-            .address("Carrera 10 #20-30")
-            .baseSalary(new BigDecimal("3500000.00"))
-            .build();
+    private  UserEntity userEntity;
+
+    @BeforeEach
+    void setUp() {
+        user = User.builder()
+                .userId(1L)
+                .name("Juan")
+                .lastName("Pérez")
+                .birthDate(LocalDate.of(1995, 5, 12))
+                .nit("123456789")
+                .phone("3001234567")
+                .email("juan.perez@example.com")
+                .address("Calle 45 #12-34")
+                .baseSalary(new BigDecimal("2500000.00"))
+                .build();
+
+        userEntity = UserEntity.builder()
+                .userId(1L)
+                .name("Carlos")
+                .lastName("Ramírez")
+                .birthDate(LocalDate.of(1990, 3, 15))
+                .nit("123456789")
+                .phone("3106547890")
+                .email("carlos.ramirez@example.com")
+                .address("Carrera 10 #20-30")
+                .baseSalary(new BigDecimal("3500000.00"))
+                .build();
+    }
 
     @Test
     void shouldFindUserById() {

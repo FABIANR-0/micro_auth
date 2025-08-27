@@ -1,8 +1,9 @@
 package co.com.pragma.api.exception;
 
 import co.com.pragma.model.user.exception.ConflictException;
-import co.com.pragma.model.user.exception.DomainException;
+import co.com.pragma.model.user.exception.ResourceNotFound;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @Component
 @Order(-2)
+@Slf4j
 public class GlobalExceptionHandler implements WebExceptionHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -28,13 +30,11 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
     public Mono<Void> handle(@NonNull ServerWebExchange exchange, @NonNull Throwable ex) {
         var response = exchange.getResponse();
 
-        System.out.println("[EXCEPTION] Error : " + ex.getMessage());
-
         if (ex instanceof ValidationException vex) {
             var errors = vex.getErrors().getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .toList();
-
+            errors.forEach(message -> log.error("Validation error: {}", message));
             return writeJson(response, HttpStatus.BAD_REQUEST, Map.of("errors", errors));
         }
 
@@ -42,8 +42,8 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
             return writeJson(response, HttpStatus.CONFLICT, Map.of("message", ex.getMessage()));
         }
 
-        if (ex instanceof DomainException) {
-            return writeJson(response, HttpStatus.BAD_REQUEST, Map.of("message", ex.getMessage()));
+        if (ex instanceof ResourceNotFound) {
+            return writeJson(response, HttpStatus.NOT_FOUND, Map.of("message", ex.getMessage()));
         }
 
         return Mono.error(ex);

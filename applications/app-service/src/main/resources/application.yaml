@@ -38,6 +38,9 @@ adapters:
     database: "micro_auth"
     username: "all_"
     password: "all_2021"
-#logging:
+logging:
+    level:
+      root: INFO
+      co.com.pragma: TRACE
 #  file:
 #    name: Logs/Log_Micro_Auth.log

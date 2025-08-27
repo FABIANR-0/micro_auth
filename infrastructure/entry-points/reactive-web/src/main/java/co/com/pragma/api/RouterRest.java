@@ -23,7 +23,6 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @AllArgsConstructor
 public class RouterRest {
 
-
     @Bean
     @RouterOperations({
             @RouterOperation(
@@ -51,6 +50,7 @@ public class RouterRest {
                                             )
                                     ),
                                     @ApiResponse(responseCode = "400", description = "Invalid input"),
+                                    @ApiResponse(responseCode = "404", description = "Role not found"),
                                     @ApiResponse(responseCode = "409", description = "User already exists")
                             }
                     )
