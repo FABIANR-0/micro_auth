@@ -50,7 +50,7 @@ class UserUseCaseTest {
                 .name("Juan")
                 .lastName("Pérez")
                 .birthDate(LocalDate.of(1995, 5, 12))
-                .nit("123456789")
+                .dni("123456789")
                 .phone("3001234567")
                 .email("juan.perez@example.com")
                 .address("Calle 45 #12-34")

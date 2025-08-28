@@ -32,7 +32,7 @@ public class UserRequest {
 
     @NotBlank(message = VALID_DOCUMENT)
     @Size(max = 20, message = VALID_DOCUMENT_SIZE)
-    private String nit;
+    private String dni;
 
     @Size(max = 20, message = VALID_PHONE_SIZE)
     private String phone;

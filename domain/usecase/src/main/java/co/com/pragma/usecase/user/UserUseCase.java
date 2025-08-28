@@ -31,7 +31,7 @@ public class UserUseCase {
 
     public Mono<User> createUser(User user) {
 
-        log.trace("Nuevo usuario a registrar con cc: {}", user.getNit());
+        log.trace("Nuevo usuario a registrar con cc: {}", user.getDni());
 
         // El caso de uso queda en una transacción
         return transactional.executeInTransaction(

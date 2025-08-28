@@ -43,7 +43,7 @@ class UserReactiveRepositoryAdapterTest {
                 .name("Juan")
                 .lastName("Pérez")
                 .birthDate(LocalDate.of(1995, 5, 12))
-                .nit("123456789")
+                .dni("123456789")
                 .phone("3001234567")
                 .email("juan.perez@example.com")
                 .address("Calle 45 #12-34")
@@ -55,7 +55,7 @@ class UserReactiveRepositoryAdapterTest {
                 .name("Carlos")
                 .lastName("Ramírez")
                 .birthDate(LocalDate.of(1990, 3, 15))
-                .nit("123456789")
+                .dni("123456789")
                 .phone("3106547890")
                 .email("carlos.ramirez@example.com")
                 .address("Carrera 10 #20-30")
@@ -136,7 +136,7 @@ class UserReactiveRepositoryAdapterTest {
         StepVerifier.create(result)
                 .expectNextMatches(createdUser ->
                         createdUser.getUserId().equals(user.getUserId()) &&
-                                createdUser.getNit().equals(user.getNit())
+                                createdUser.getDni().equals(user.getDni())
                 ).verifyComplete();
 
         verify(repository).save(any(UserEntity.class));

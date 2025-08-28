@@ -26,7 +26,7 @@ public class UserResponse {
     @JsonProperty("birth_date")
     private LocalDate birthDate;
 
-    private String nit;
+    private String dni;
 
     private String phone;
 
