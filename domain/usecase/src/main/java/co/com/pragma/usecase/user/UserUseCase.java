@@ -9,8 +9,7 @@ import co.com.pragma.model.util.TransactionalGateway;
 import co.com.pragma.model.util.LoggerGateway;
 import reactor.core.publisher.Mono;
 
-import static co.com.pragma.model.user.util.Constants.VALID_EMAIL_DUPLICATE;
-import static co.com.pragma.model.user.util.Constants.VALID_ROLE_EXISTS;
+import static co.com.pragma.model.user.util.Constants.*;
 
 public class UserUseCase {
 
@@ -52,5 +51,10 @@ public class UserUseCase {
                                     .doOnSuccess(createdUser -> log.info("Usuario creado con id: {}", createdUser.getUserId()));
                         })
         );
+    }
+
+    public Mono<User> getClientByDni(String dni) {
+        return userRepository.getByDni(dni)
+                .switchIfEmpty(Mono.error(new ResourceNotFound(VALID_USER_EXISTS + dni)));
     }
 }

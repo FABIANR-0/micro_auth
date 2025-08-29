@@ -29,4 +29,10 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
     public Mono<Boolean> existsByEmail(String email) {
         return this.repository.existsByEmailIgnoreCase(email);
     }
+
+    @Override
+    public Mono<User> getByDni(String dni) {
+        return this.repository.findByDni(dni)
+                .map(this::toEntity);
+    }
 }

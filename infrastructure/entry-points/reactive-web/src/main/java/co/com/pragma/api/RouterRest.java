@@ -1,8 +1,11 @@
 package co.com.pragma.api;
 
+import co.com.pragma.api.dto.UserApiResponse;
 import co.com.pragma.api.dto.UserRequest;
 import co.com.pragma.api.dto.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -27,7 +31,7 @@ public class RouterRest {
     @RouterOperations({
             @RouterOperation(
                     path = "/api/v1/users",
-                    produces = { "application/json" },
+                    produces = {"application/json"},
                     method = RequestMethod.POST,
                     beanClass = Handler.class,
                     beanMethod = "createUser",
@@ -54,9 +58,40 @@ public class RouterRest {
                                     @ApiResponse(responseCode = "409", description = "User already exists")
                             }
                     )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/user/dni/{dni}",
+                    produces = {"application/json"},
+                    method = RequestMethod.GET,
+                    beanClass = Handler.class,
+                    beanMethod = "getUserByDni",
+                    operation = @Operation(
+                            operationId = "GetUserByDni",
+                            summary = "Get user by DNI",
+                            parameters = {
+                                    @Parameter(
+                                            name = "dni",
+                                            in = ParameterIn.PATH,
+                                            required = true,
+                                            description = "DNI of the user",
+                                            schema = @Schema(type = "string")
+                                    )
+                            },
+                            responses = {
+                                    @ApiResponse(responseCode = "200", description = "Successful operation",
+                                            content = @Content(
+                                                    mediaType = "application/json",
+                                                    schema = @Schema(implementation = UserApiResponse.class)
+                                            )
+                                    ),
+                                    @ApiResponse(responseCode = "404", description = "User not found")
+                            }
+                    )
             )
-    })
+    }
+    )
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-        return route(POST("/api/v1/users"), handler::createUser);
+        return route(POST("/api/v1/users"), handler::createUser)
+                .andRoute(GET("/api/v1/user/dni/{dni}"), handler::getUserByDni);
     }
 }

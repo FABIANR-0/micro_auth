@@ -18,8 +18,7 @@ import reactor.test.StepVerifier;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static co.com.pragma.model.user.util.Constants.VALID_EMAIL_DUPLICATE;
-import static co.com.pragma.model.user.util.Constants.VALID_ROLE_EXISTS;
+import static co.com.pragma.model.user.util.Constants.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -114,5 +113,38 @@ class UserUseCaseTest {
         verify(userRepository).existsByEmail(user.getEmail());
         verify(roleRepository).existsById(user.getRoleId());
         verify(userRepository, never()).create(any());
+    }
+
+    @Test
+    void getClientByDni_UserExists() {
+        // Arrange
+        String dni = "123456789";
+        when(userRepository.getByDni(dni)).thenReturn(Mono.just(user));
+
+        // Act & Assert
+        StepVerifier.create(userUseCase.getClientByDni(dni))
+                .expectNextMatches(foundUser -> foundUser.getDni().equals(dni))
+                .verifyComplete();
+
+        // Verify interactions
+        verify(userRepository).getByDni(dni);
+    }
+
+    @Test
+    void getClientByDni_UserNotFound() {
+        // Arrange
+        String dni = "987654321";
+        when(userRepository.getByDni(dni)).thenReturn(Mono.empty());
+
+        String validUserExists = VALID_USER_EXISTS+dni;
+        // Act & Assert
+        StepVerifier.create(userUseCase.getClientByDni(dni))
+                .expectErrorMatches(throwable ->
+                        throwable instanceof ResourceNotFound &&
+                                validUserExists.equals(throwable.getMessage()))
+                .verify();
+
+        // Verify interactions
+        verify(userRepository).getByDni(dni);
     }
 }

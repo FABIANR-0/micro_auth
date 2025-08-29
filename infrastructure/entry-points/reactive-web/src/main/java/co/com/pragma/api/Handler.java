@@ -28,4 +28,10 @@ public class Handler {
 
                 );
     }
+
+    public Mono<ServerResponse> getUserByDni(ServerRequest serverRequest) {
+        String dni = serverRequest.pathVariable("dni");
+        return userUseCase.getClientByDni(dni)
+                .flatMap(user -> ServerResponse.ok().bodyValue(userMapper.toDtoApi(user)));
+    }
 }

@@ -1,5 +1,6 @@
 package co.com.pragma.api.mapper;
 
+import co.com.pragma.api.dto.UserApiResponse;
 import co.com.pragma.api.dto.UserRequest;
 import co.com.pragma.api.dto.UserResponse;
 import co.com.pragma.model.user.User;
@@ -10,4 +11,6 @@ public interface UserMapper {
     User toUser(UserRequest dto);
 
     UserResponse toDto(User user);
+
+    UserApiResponse toDtoApi(User user);
 }
