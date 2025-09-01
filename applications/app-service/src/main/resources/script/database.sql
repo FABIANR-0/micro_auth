@@ -20,6 +20,23 @@ CREATE TABLE "user"
     email       VARCHAR(100)   NOT NULL UNIQUE,
     address     VARCHAR(100),
     base_salary NUMERIC(10, 2) NOT NULL,
+    password    VARCHAR(200)    NOT NULL,
     role_id     BIGINT NOT NULL,
     CONSTRAINT fk_user_role FOREIGN KEY (role_id) REFERENCES role(role_id)
 );
+
+INSERT INTO "user" (
+    name, last_name, birth_date, dni, phone, email, address, base_salary, role_id, password
+)
+VALUES (
+           'Fabián',
+           'Rincón Chinchilla',
+           '2004-07-14',
+           '123456789',
+           '+57 3000000000',
+           'fabian.rincon@example.com',
+           'Ocaña, Colombia',
+           5000000.00,
+           1,
+           '$2y$10$VQDgZPmoeLc1w13mdje.wOc1rlJyqjEeqDqgqKMQ1GKgdeonFi0cq'
+       );

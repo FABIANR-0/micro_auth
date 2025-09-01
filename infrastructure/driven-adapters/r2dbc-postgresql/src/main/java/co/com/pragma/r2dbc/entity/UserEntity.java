@@ -43,4 +43,5 @@ public class UserEntity {
     @Column("role_id")
     private Long roleId;
 
+    private String password;
 }

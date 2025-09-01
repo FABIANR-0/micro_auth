@@ -5,6 +5,7 @@ import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.exception.ResourceNotFound;
 import co.com.pragma.model.user.gateways.UserRepository;
 import co.com.pragma.model.user.exception.ConflictException;
+import co.com.pragma.model.util.PasswordGateway;
 import co.com.pragma.model.util.TransactionalGateway;
 import co.com.pragma.model.util.LoggerGateway;
 import reactor.core.publisher.Mono;
@@ -21,11 +22,14 @@ public class UserUseCase {
 
     private final TransactionalGateway transactional;
 
-    public UserUseCase(UserRepository userRepository, RoleRepository roleRepository, LoggerGateway log, TransactionalGateway transactional) {
+    private final PasswordGateway password;
+
+    public UserUseCase(UserRepository userRepository, RoleRepository roleRepository, LoggerGateway log, TransactionalGateway transactional, PasswordGateway password) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.log = log;
         this.transactional = transactional;
+        this.password = password;
     }
 
     public Mono<User> createUser(User user) {
@@ -47,6 +51,7 @@ public class UserUseCase {
                                 log.error("El rol con id {} no existe ", user.getRoleId());
                                 return Mono.error(new ResourceNotFound(VALID_ROLE_EXISTS));
                             }
+                            user.setPassword(password.encode(user.getPassword()));
                             return userRepository.create(user)
                                     .doOnSuccess(createdUser -> log.info("Usuario creado con id: {}", createdUser.getUserId()));
                         })
