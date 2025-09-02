@@ -47,6 +47,10 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
 
             case InvalidCredentialsException exception ->
                 writeJson(response, HttpStatus.UNAUTHORIZED, Map.of("message", exception.getMessage()));
+
+            case TokenValidationException exception ->
+                    writeJson(response, HttpStatus.UNAUTHORIZED, Map.of("message", exception.getMessage()));
+
             default -> Mono.error(ex);
 
         };
