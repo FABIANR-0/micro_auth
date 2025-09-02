@@ -31,5 +31,5 @@ public class Constants {
     public static final String BASE_SALARY_MIN = "0.0";
     public static final String BASE_SALARY_MAX = "15000000.0";
 
-    public static final String PASSWORD_VALID = "La contraseña es un campo requerido.";
+    public static final String VALID_PASSWORD = "La contraseña es un campo requerido.";
 }

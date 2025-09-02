@@ -1,8 +1,6 @@
 package co.com.pragma.api;
 
-import co.com.pragma.api.dto.UserApiResponse;
-import co.com.pragma.api.dto.UserRequest;
-import co.com.pragma.api.dto.UserResponse;
+import co.com.pragma.api.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -87,11 +85,44 @@ public class RouterRest {
                                     @ApiResponse(responseCode = "404", description = "User not found")
                             }
                     )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/login",
+                    produces = {"application/json"},
+                    method = RequestMethod.POST,
+                    beanClass = Handler.class,
+                    beanMethod = "login",
+                    operation = @Operation(
+                            operationId = "LoginUser",
+                            summary = "Authenticate user and generate JWT",
+                            requestBody = @RequestBody(
+                                    required = true,
+                                    description = "User credentials for login",
+                                    content = @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = LoginRequest.class)
+                                    )
+                            ),
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "Login successful",
+                                            content = @Content(
+                                                    mediaType = "application/json",
+                                                    schema = @Schema(implementation = LoginResponse.class)
+                                            )
+                                    ),
+                                    @ApiResponse(responseCode = "401", description = "Invalid email or password"),
+                                    @ApiResponse(responseCode = "400", description = "Invalid request body"),
+                                    @ApiResponse(responseCode = "404", description = "User not found")
+                            }
+                    )
             )
     }
     )
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
         return route(POST("/api/v1/users"), handler::createUser)
-                .andRoute(GET("/api/v1/user/dni/{dni}"), handler::getUserByDni);
+                .andRoute(GET("/api/v1/user/dni/{dni}"), handler::getUserByDni)
+                .andRoute(POST("/api/v1/login"), handler::login);
     }
 }

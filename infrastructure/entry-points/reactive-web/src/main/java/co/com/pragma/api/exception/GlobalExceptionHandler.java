@@ -1,5 +1,6 @@
 package co.com.pragma.api.exception;
 
+import co.com.pragma.model.auth.exception.InvalidCredentialsException;
 import co.com.pragma.model.user.exception.ConflictException;
 import co.com.pragma.model.user.exception.ResourceNotFound;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +45,8 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
             case ResourceNotFound exception ->
                     writeJson(response, HttpStatus.NOT_FOUND, Map.of("message", exception.getMessage()));
 
+            case InvalidCredentialsException exception ->
+                writeJson(response, HttpStatus.UNAUTHORIZED, Map.of("message", exception.getMessage()));
             default -> Mono.error(ex);
 
         };

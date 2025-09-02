@@ -16,6 +16,7 @@ import org.springframework.security.web.server.context.NoOpServerSecurityContext
 @RequiredArgsConstructor
 @EnableReactiveMethodSecurity
 public class SecurityConfig {
+
     private final JwtFilter jwtFilter;
 
     @Bean
@@ -29,18 +30,20 @@ public class SecurityConfig {
                         .pathMatchers(
                                 "/api/auth/**",
                                 "/api/v1/login",
-                                "/.well-known/jwks.json",
                                 "/v3/api-docs/**",
+                                "/v3/api-docs.yaml",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
+                                "/swagger-ui/index.html",
+                                "/swagger-resources/**",
+                                "/webjars/**",
                                 "/proxy/**",
                                 "/actuator/**"
                         ).permitAll()
-                        .pathMatchers(HttpMethod.POST, "/api/v1/users").hasAnyAuthority("ADMIN")
+                        .pathMatchers(HttpMethod.POST, "/api/v1/users").hasAnyAuthority("ADMIN", "ADVISOR")
                         .anyExchange().authenticated()
                 )
-                //.addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-                .addFilterAfter(new SecurityHeadersConfig(), SecurityWebFiltersOrder.AUTHENTICATION)
+                .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }
 

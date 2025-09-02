@@ -1,8 +1,7 @@
 package co.com.pragma.api.mapper;
 
-import co.com.pragma.api.dto.UserApiResponse;
-import co.com.pragma.api.dto.UserRequest;
-import co.com.pragma.api.dto.UserResponse;
+import co.com.pragma.api.dto.*;
+import co.com.pragma.model.auth.Auth;
 import co.com.pragma.model.user.User;
 import org.mapstruct.Mapper;
 
@@ -13,4 +12,8 @@ public interface UserMapper {
     UserResponse toDto(User user);
 
     UserApiResponse toDtoApi(User user);
+
+    Auth toAuthLogin(LoginRequest dto);
+
+    LoginResponse toDtoLogin(Auth auth);
 }

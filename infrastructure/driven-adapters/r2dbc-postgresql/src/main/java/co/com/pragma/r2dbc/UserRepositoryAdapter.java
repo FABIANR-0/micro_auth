@@ -31,6 +31,12 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
+    public Mono<User> getByEmail(String email) {
+        return this.repository.findByEmailIgnoreCase(email)
+                .map(this::toEntity);
+    }
+
+    @Override
     public Mono<User> getByDni(String dni) {
         return this.repository.findByDni(dni)
                 .map(this::toEntity);

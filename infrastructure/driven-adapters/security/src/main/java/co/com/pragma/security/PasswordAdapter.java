@@ -4,6 +4,7 @@ import co.com.pragma.model.util.PasswordGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class PasswordAdapter implements PasswordGateway {
     }
 
     @Override
-    public boolean matches(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
+    public Mono<Boolean> matches(String rawPassword, String encodedPassword) {
+        return Mono.just(passwordEncoder.matches(rawPassword, encodedPassword));
     }
 }

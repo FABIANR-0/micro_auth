@@ -1,8 +1,10 @@
 package co.com.pragma.api;
 
+import co.com.pragma.api.dto.LoginRequest;
 import co.com.pragma.api.dto.UserRequest;
 import co.com.pragma.api.mapper.UserMapper;
 import co.com.pragma.api.util.ValidationUtils;
+import co.com.pragma.usecase.auth.AuthUseCase;
 import co.com.pragma.usecase.user.UserUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,8 @@ public class Handler {
 
     private final UserUseCase userUseCase;
 
+    private final AuthUseCase authUseCase;
+
     private final ValidationUtils validationUtils;
 
     public Mono<ServerResponse> createUser(ServerRequest serverRequest) {
@@ -33,5 +37,13 @@ public class Handler {
         String dni = serverRequest.pathVariable("dni");
         return userUseCase.getClientByDni(dni)
                 .flatMap(user -> ServerResponse.ok().bodyValue(userMapper.toDtoApi(user)));
+    }
+
+    public Mono<ServerResponse> login(ServerRequest serverRequest) {
+        return validationUtils.validateBody(serverRequest, LoginRequest.class)
+                .flatMap(loginRequest -> authUseCase.login(userMapper.toAuthLogin(loginRequest))
+                        .flatMap(auth -> ServerResponse.status(HttpStatus.OK).bodyValue(userMapper.toDtoLogin(auth)))
+
+                );
     }
 }

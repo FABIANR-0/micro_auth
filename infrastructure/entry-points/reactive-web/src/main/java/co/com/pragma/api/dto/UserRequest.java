@@ -56,7 +56,7 @@ public class UserRequest {
     @JsonProperty("base_salary")
     private BigDecimal baseSalary;
 
-    @NotBlank(message = PASSWORD_VALID)
+    @NotBlank(message = VALID_PASSWORD)
     String password;
 
 }
