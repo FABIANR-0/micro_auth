@@ -51,7 +51,11 @@ public class SecurityConfig {
                 ).exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((exchange, ex) -> {
                             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                            return exchange.getResponse().setComplete();
+                            exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+                            String body = "{\"message\":\"No autorizado: debes iniciar sesión para acceder\"}";
+                            DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(body.getBytes(StandardCharsets.UTF_8));
+
+                            return exchange.getResponse().writeWith(Mono.just(buffer));
                         })
                         .accessDeniedHandler((exchange, denied) -> {
                             exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);

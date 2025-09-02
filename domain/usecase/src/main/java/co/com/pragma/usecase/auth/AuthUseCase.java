@@ -32,12 +32,16 @@ public class AuthUseCase {
     }
 
     public Mono<Auth> login(Auth auth) {
-        log.info("iniciando validación de credenciales");
+        log.info("Iniciando validación de credenciales");
         return userRepository.getByEmail(auth.getEmail())
-                .switchIfEmpty(Mono.error(new ResourceNotFound("usuario no existente")))
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.warn("Usuario no encontrado para el email: {}", auth.getEmail());
+                    return Mono.error(new ResourceNotFound("usuario no existente"));
+                }))
                 .flatMap(user -> password.matches(auth.getPassword(), user.getPassword())
                         .flatMap(match -> {
                             if (!match) {
+                                log.warn("Credenciales incorrectas para el usuario con email: {}", auth.getEmail());
                                 return Mono.error(new InvalidCredentialsException("Credenciales incorrectas"));
                             }
                             return roleRepository.findById(user.getRoleId())
@@ -45,6 +49,7 @@ public class AuthUseCase {
                                     .map(role -> {
                                         String token = jwtGateway.generateToken(user, role.getName());
                                         auth.setToken(token);
+                                        log.info("Token generado exitosamente para el usuario: {}", auth.getEmail());
                                         return auth;
                                     });
                         })
