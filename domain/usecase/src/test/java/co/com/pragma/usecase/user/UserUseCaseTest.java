@@ -5,6 +5,7 @@ import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.exception.ConflictException;
 import co.com.pragma.model.user.exception.ResourceNotFound;
 import co.com.pragma.model.user.gateways.UserRepository;
+import co.com.pragma.model.util.PasswordGateway;
 import co.com.pragma.model.util.TransactionalGateway;
 import co.com.pragma.model.util.LoggerGateway;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,9 @@ class UserUseCaseTest {
     private LoggerGateway log;
 
     @Mock
+    private PasswordGateway passwordGateway;
+
+    @Mock
     private TransactionalGateway transactional;
 
     @InjectMocks
@@ -54,6 +58,7 @@ class UserUseCaseTest {
                 .email("juan.perez@example.com")
                 .address("Calle 45 #12-34")
                 .baseSalary(new BigDecimal("2500000.00"))
+                .password("123456")
                 .build();
 
         when(transactional.executeInTransaction(any(Mono.class)))
@@ -65,6 +70,8 @@ class UserUseCaseTest {
         // Arrange
         when(userRepository.existsByEmail(user.getEmail())).thenReturn(Mono.just(false));
         when(roleRepository.existsById(user.getRoleId())).thenReturn(Mono.just(true));
+        String encodedPassword = "encoded123456";
+        when(passwordGateway.encode(user.getPassword())).thenReturn(encodedPassword);
         when(userRepository.create(any(User.class))).thenReturn(Mono.just(user));
 
         // Act & Assert
@@ -75,7 +82,11 @@ class UserUseCaseTest {
         // Verify interactions
         verify(userRepository).existsByEmail(user.getEmail());
         verify(roleRepository).existsById(user.getRoleId());
+        verify(passwordGateway).encode("123456");
         verify(userRepository).create(user);
+
+        // Verify that the password was encoded before saving
+        assert user.getPassword().equals(encodedPassword);
     }
 
     @Test
@@ -136,7 +147,7 @@ class UserUseCaseTest {
         String dni = "987654321";
         when(userRepository.getByDni(dni)).thenReturn(Mono.empty());
 
-        String validUserExists = VALID_USER_EXISTS+dni;
+        String validUserExists = VALID_USER_EXISTS + dni;
         // Act & Assert
         StepVerifier.create(userUseCase.getClientByDni(dni))
                 .expectErrorMatches(throwable ->
