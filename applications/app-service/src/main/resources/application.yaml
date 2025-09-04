@@ -46,4 +46,5 @@ logging:
 #  file:
 #    name: Logs/Log_Micro_Auth.log
 jwt:
+  secret: hR9N9m5Rz4vY3KqT1uZpZy3cXJm7R4pQh2LxT8vGxX8hY7wV9zCkB2gD3fH4J5L6
   expiration: 3600

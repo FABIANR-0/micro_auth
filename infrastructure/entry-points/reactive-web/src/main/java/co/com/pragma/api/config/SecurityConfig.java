@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 "/actuator/**"
                         ).permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/users").hasAnyAuthority("ADMIN", "ADVISOR")
+                        .pathMatchers(HttpMethod.GET, "/api/v1/user/dni/{dni}").hasAnyAuthority("CLIENT")
                         .anyExchange().authenticated()
                 ).exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((exchange, ex) -> {

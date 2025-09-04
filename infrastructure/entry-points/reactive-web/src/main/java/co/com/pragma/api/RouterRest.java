@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
@@ -36,6 +37,9 @@ public class RouterRest {
                     operation = @Operation(
                             operationId = "CreateNewUser",
                             summary = "Create new user client",
+                            security = {
+                                    @SecurityRequirement(name = "bearerAuth")
+                            },
                             requestBody = @RequestBody(
                                     required = true,
                                     description = "User object to create",
@@ -66,6 +70,9 @@ public class RouterRest {
                     operation = @Operation(
                             operationId = "GetUserByDni",
                             summary = "Get user by DNI",
+                            security = {
+                                    @SecurityRequirement(name = "bearerAuth")
+                            },
                             parameters = {
                                     @Parameter(
                                             name = "dni",
